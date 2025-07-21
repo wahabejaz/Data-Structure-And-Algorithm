@@ -48,8 +48,8 @@ Each topic contains `.cpp` files with:
 ---
 
 ## Connect with Me
-- GitHub: [your-username](https://github.com/your-username)
-- LinkedIn: [your-linkedin](https://linkedin.com/in/your-profile)
+- GitHub: [Wahab Ejaz](https://github.com/wahabejaz)
+- LinkedIn: [Wahab Ejaz](https://www.linkedin.com/in/wahab-ejaz-025821283/)
 
 ---
 
