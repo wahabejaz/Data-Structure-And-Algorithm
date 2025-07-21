@@ -1,0 +1,271 @@
+//studentDatabaseManagementSystem
+//The program inputs the student data and display that data.
+//Programmer Name : Wahab Ejaz
+//Compiler : gcc
+//Date : 21,9,2024.
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <limits>
+#define MAX_SUB 5
+#define MAX_STUD 70
+using namespace std;
+
+struct date {
+    int dd;
+    int mm;
+    int yy;
+};
+
+struct studInfo {
+    string name;
+    string fName;
+    int regNo;
+    int subMarks[MAX_SUB];
+    float cgpa;
+    date DOB, DOA;
+};
+
+// Function declarations
+void readData(studInfo ss[], int &nn);
+void searchData(studInfo ss[], int nn);
+void appendData(studInfo ss[], int &nn);
+void sortData(studInfo ss[], int nn);
+void deleteData(studInfo ss[], int &nn);
+void updateData(studInfo ss[], int &nn);
+void displayData(studInfo ss[], int nn);
+void validateData(studInfo &student);
+
+
+int main() {
+    studInfo students[MAX_STUD];
+    int studentCount = 0;
+    int choice;
+    char cont;
+    
+    do {
+        cout << "----- STUDENT RECORD MANAGEMENT -----" << endl;
+        cout << "1. Enter student data" << endl;
+        cout << "2. Search student by REG NO" << endl;
+        cout << "3. Append student data" << endl;
+        cout << "4. Update student data" << endl;
+        cout << "5. Delete student data" << endl;
+        cout << "6. Display all student data" << endl;
+        cout << "7. Sort student data by REG NO" << endl;
+        cout << "Enter your choice(1-7): ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                readData(students, studentCount);
+                break;
+            case 2:
+                searchData(students, studentCount);
+                break;
+            case 3:
+                appendData(students, studentCount);
+                break;
+            case 4:
+                updateData(students, studentCount);
+                break;
+            case 5:
+                deleteData(students, studentCount);
+                break;
+            case 6:
+                displayData(students, studentCount);
+                break;
+            case 7:
+                sortData(students, studentCount);
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }
+
+        cout << "Do you want to perform another action? (Y/N): ";
+        cin >> cont;
+
+    } while (cont == 'Y' || cont == 'y');
+
+    return 0;
+}
+
+void validateData(studInfo &student) {
+    // Validate Registration Number
+    do {
+        cout << "Enter registration number: ";
+        cin >> student.regNo;
+        if (student.regNo <= 0) {
+            cout << "Invalid registration number! Please enter a positive number." << endl;
+        }
+    } while (student.regNo <= 0);
+
+    // Validate Name
+    cin.ignore();  // Clear buffer
+    do {
+        cout << "Enter student's name: ";
+        getline(cin, student.name);
+        if (student.name.empty()) {
+            cout << "Name cannot be empty! Please enter a valid name." << endl;
+        }
+    } while (student.name.empty());
+
+    // Validate Father's Name
+    do {
+        cout << "Enter father's name: ";
+        getline(cin, student.fName);
+        if (student.fName.empty()) {
+            cout << "Father's name cannot be empty! Please enter a valid name." << endl;
+        }
+    } while (student.fName.empty());
+
+    // Validate Marks
+    for (int i = 0; i < MAX_SUB; i++) {
+        do {
+            cout << "Enter marks for subject " << i + 1 << " (0-100): ";
+            cin >> student.subMarks[i];
+            if (student.subMarks[i] < 0 || student.subMarks[i] > 100) {
+                cout << "Invalid marks! Marks should be between 0 and 100." << endl;
+            }
+        } while (student.subMarks[i] < 0 || student.subMarks[i] > 100);
+    }
+
+    // Validate CGPA
+    do {
+        cout << "Enter CGPA (0.0-4.0): ";
+        cin >> student.cgpa;
+        if (student.cgpa < 0.0 || student.cgpa > 4.0) {
+            cout << "Invalid CGPA! Please enter a value between 0.0 and 4.0." << endl;
+        }
+    } while (student.cgpa < 0.0 || student.cgpa > 4.0);
+
+    // Validate Date of Birth
+    do {
+        cout << "Enter Date of Birth (dd mm yyyy): ";
+        cin >> student.DOB.dd >> student.DOB.mm >> student.DOB.yy;
+        if (student.DOB.dd <= 0 || student.DOB.dd > 31 || student.DOB.mm <= 0 || student.DOB.mm > 12 || student.DOB.yy < 1900) {
+            cout << "Invalid Date of Birth! Please enter a valid date." << endl;
+        }
+    } while (student.DOB.dd <= 0 || student.DOB.dd > 31 || student.DOB.mm <= 0 || student.DOB.mm > 12 || student.DOB.yy < 1900);
+
+    // Validate Date of Admission
+    do {
+        cout << "Enter Date of Admission (dd mm yyyy): ";
+        cin >> student.DOA.dd >> student.DOA.mm >> student.DOA.yy;
+        if (student.DOA.dd <= 0 || student.DOA.dd > 31 || student.DOA.mm <= 0 || student.DOA.mm > 12 || student.DOA.yy < 1900) {
+            cout << "Invalid Date of Admission! Please enter a valid date." << endl;
+        }
+    } while (student.DOA.dd <= 0 || student.DOA.dd > 31 || student.DOA.mm <= 0 || student.DOA.mm > 12 || student.DOA.yy < 1900);
+}
+
+void readData(studInfo ss[], int &nn) {
+    cout << "Enter total number of students (MAX 70): ";
+    cin >> nn;
+    while (nn <= 0 || nn > 70) {
+        cout << "Invalid input! Please enter a number between 1 and 70: ";
+        cin >> nn;
+    }
+
+    for (int i = 0; i < nn; i++) {
+        cout << "Enter data for student " << i + 1 << endl;
+        validateData(ss[i]);
+    }
+}
+
+void searchData(studInfo ss[], int nn) {
+    int regNum;
+    cout << "Enter the REG NO of student you want to search: ";
+    cin >> regNum;
+    bool found = false;
+    for (int i = 0; i < nn; i++) {
+        if (regNum == ss[i].regNo) {
+            found = true;
+            cout << "Student record found at position: " << i + 1 << endl;
+            cout << "Name: " << ss[i].name << ", Father's Name: " << ss[i].fName << endl;
+            break;
+        }
+    }
+    if (!found)
+        cout << "No record found!" << endl;
+}
+
+void appendData(studInfo ss[], int &nn) {
+    if (nn >= MAX_STUD) {
+        cout << "Maximum student limit reached." << endl;
+        return;
+    }
+
+    cout << "Enter data for new student:" << endl;
+    validateData(ss[nn]);
+    nn++;
+    cout << "New student record added successfully!" << endl;
+}
+
+void updateData(studInfo ss[], int &nn) {
+    int regNo;
+    cout << "Enter the reg no. of student you want to update: ";
+    cin >> regNo;
+
+    for (int i = 0; i < nn; i++) {
+        if (regNo == ss[i].regNo) {
+            cout << "Record found for student " << ss[i].name << endl;
+            cout << "Enter updated data:" << endl;
+            validateData(ss[i]);
+            cout << "Record updated successfully!" << endl;
+            return;
+        }
+    }
+    cout << "No record found with REG NO: " << regNo << endl;
+}
+
+void deleteData(studInfo ss[], int &nn) {
+    int regNo;
+    cout << "Enter the REG NO of student you want to delete: ";
+    cin >> regNo;
+    for (int i = 0; i < nn; i++) {
+        if (regNo == ss[i].regNo) {
+            for (int j = i; j < nn - 1; j++) {
+                ss[j] = ss[j + 1];
+            }
+            nn--;
+            cout << "Deleted record successfully!" << endl;
+            return;
+        }
+    }
+    cout << "No record found!" << endl;
+}
+
+void sortData(studInfo ss[], int nn) {
+    if (nn == 0) {
+        cout << "First store data in order to sort." << endl;
+        return;
+    }
+    for (int i = 0; i < nn - 1; i++) {
+        for (int j = 0; j < nn - i - 1; j++) {
+            if (ss[j].regNo > ss[j + 1].regNo)
+                swap(ss[j], ss[j + 1]);
+        }
+    }
+    cout << "Data sorted by registration number." << endl;
+}
+
+void displayData(studInfo ss[], int nn) {
+    if (nn == 0) {
+        cout << "No data to display!" << endl;
+        return;
+    }
+
+    cout << "----- Displaying Student Data -----" << endl;
+    for (int i = 0; i < nn; i++) {
+        cout << "Student " << i + 1 << ":" << endl;
+        cout << "REG NO: " << ss[i].regNo << endl;
+        cout << "Name: " << ss[i].name << endl;
+        cout << "Father's Name: " << ss[i].fName << endl;
+        for (int j = 0; j < MAX_SUB; j++) {
+            cout << "Marks for subject " << j + 1 << ": " << ss[i].subMarks[j] << endl;
+        }
+        cout << "CGPA: " << ss[i].cgpa << endl;
+        cout << "Date of Birth: " << ss[i].DOB.dd << "/" << ss[i].DOB.mm << "/" << ss[i].DOB.yy << endl;
+        cout << "Date of Admission: " << ss[i].DOA.dd << "/" << ss[i].DOA.mm << "/" << ss[i].DOA.yy << endl;
+        cout << "----------------------------------" << endl;
+    }
+}
