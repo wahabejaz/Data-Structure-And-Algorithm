@@ -1,4 +1,5 @@
-//programmer Name: Wahab Ejaz
+//programmer Name : Wahab Ejaz
+//Compiler : gcc/g++
 #include <iostream>
 #include <fstream>
 #include <string>

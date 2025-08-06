@@ -1,3 +1,5 @@
+//programmer Name : Wahab Ejaz
+//Compiler : gcc/g++
 #include <iostream>
 using namespace std;
 
